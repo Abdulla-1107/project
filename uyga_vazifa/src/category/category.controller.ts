@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import {
@@ -17,12 +18,19 @@ import {
 } from "@nestjs/swagger";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { Role } from "src/decorators/role.decorator";
+import { Roles } from "src/Enums/user.role";
+import { RoleGuard } from "src/auth/role.guard";
+import { AuthGuard } from "src/auth/auth.guard";
 
-@ApiTags("Category") 
+@ApiTags("Category")
 @Controller("category")
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @Role(Roles.ADMIN)
+  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard)
   @Post()
   @ApiOperation({ summary: "Kategoriyani yaratish" })
   @ApiBody({ type: CreateCategoryDto })
@@ -45,13 +53,16 @@ export class CategoryController {
 
   @Get(":id")
   @ApiOperation({ summary: "Bitta kategoriyani olish" })
-  @ApiParam({ name: "id", description: "Kategoriya ID" }) 
+  @ApiParam({ name: "id", description: "Kategoriya ID" })
   @ApiResponse({ status: 200, description: "Kategoriya topildi" })
   @ApiResponse({ status: 404, description: "Kategoriya topilmadi" })
   findOne(@Param("id") id: string) {
     return this.categoryService.findOne(id);
   }
 
+  @Role(Roles.ADMIN, Roles.SUPERADMIN)
+  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard)
   @Patch(":id")
   @ApiOperation({ summary: "Kategoriya ma'lumotlarini yangilash" })
   @ApiParam({
@@ -68,6 +79,9 @@ export class CategoryController {
     return this.categoryService.update(id, updateCategoryDto);
   }
 
+  @Role(Roles.ADMIN)
+  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard)
   @Delete(":id")
   @ApiOperation({ summary: "Kategoriya o'chirish" })
   @ApiParam({ name: "id", description: "O'chiriladigan kategoriyaning ID" })

@@ -18,6 +18,10 @@ const product_service_1 = require("./product.service");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const swagger_1 = require("@nestjs/swagger");
+const auth_guard_1 = require("../auth/auth.guard");
+const role_guard_1 = require("../auth/role.guard");
+const role_decorator_1 = require("../decorators/role.decorator");
+const user_role_1 = require("../Enums/user.role");
 let ProductController = class ProductController {
     productService;
     constructor(productService) {
@@ -41,54 +45,65 @@ let ProductController = class ProductController {
 };
 exports.ProductController = ProductController;
 __decorate([
+    (0, role_decorator_1.Role)(user_role_1.Roles.ADMIN),
+    (0, common_1.UseGuards)(role_guard_1.RoleGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
-    (0, swagger_1.ApiOperation)({ summary: 'Mahsulot yaratish' }),
+    (0, swagger_1.ApiOperation)({ summary: "Mahsulot yaratish" }),
     (0, swagger_1.ApiBody)({ type: create_product_dto_1.CreateProductDto }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'Mahsulot yaratildi' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Mahsulot yaratildi" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "create", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({ summary: 'Barcha mahsulotlarni olish' }),
+    (0, swagger_1.ApiOperation)({ summary: "Barcha mahsulotlarni olish" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Bitta mahsulotni olish' }),
-    (0, swagger_1.ApiParam)({ name: 'id', description: 'Mahsulot ID' }),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Get)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: "Bitta mahsulotni olish" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Mahsulot ID" }),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Mahsulotni yangilash' }),
-    (0, swagger_1.ApiParam)({ name: 'id', description: 'Mahsulot ID' }),
+    (0, role_decorator_1.Role)(user_role_1.Roles.ADMIN, user_role_1.Roles.SUPERADMIN),
+    (0, common_1.UseGuards)(role_guard_1.RoleGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Patch)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: "Mahsulotni yangilash" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Mahsulot ID" }),
     (0, swagger_1.ApiBody)({ type: update_product_dto_1.UpdateProductDto }),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_product_dto_1.UpdateProductDto]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Mahsulotni o\'chirish' }),
-    (0, swagger_1.ApiParam)({ name: 'id', description: 'Mahsulot ID' }),
-    __param(0, (0, common_1.Param)('id')),
+    (0, role_decorator_1.Role)(user_role_1.Roles.ADMIN),
+    (0, common_1.UseGuards)(role_guard_1.RoleGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Delete)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: "Mahsulotni o'chirish" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Mahsulot ID" }),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "remove", null);
 exports.ProductController = ProductController = __decorate([
-    (0, swagger_1.ApiTags)('Product'),
-    (0, common_1.Controller)('product'),
+    (0, swagger_1.ApiTags)("Product"),
+    (0, common_1.Controller)("product"),
     __metadata("design:paramtypes", [product_service_1.ProductService])
 ], ProductController);
 //# sourceMappingURL=product.controller.js.map

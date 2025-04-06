@@ -18,6 +18,10 @@ const category_service_1 = require("./category.service");
 const swagger_1 = require("@nestjs/swagger");
 const create_category_dto_1 = require("./dto/create-category.dto");
 const update_category_dto_1 = require("./dto/update-category.dto");
+const role_decorator_1 = require("../decorators/role.decorator");
+const user_role_1 = require("../Enums/user.role");
+const role_guard_1 = require("../auth/role.guard");
+const auth_guard_1 = require("../auth/auth.guard");
 let CategoryController = class CategoryController {
     categoryService;
     constructor(categoryService) {
@@ -41,6 +45,9 @@ let CategoryController = class CategoryController {
 };
 exports.CategoryController = CategoryController;
 __decorate([
+    (0, role_decorator_1.Role)(user_role_1.Roles.ADMIN),
+    (0, common_1.UseGuards)(role_guard_1.RoleGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
     (0, swagger_1.ApiOperation)({ summary: "Kategoriyani yaratish" }),
     (0, swagger_1.ApiBody)({ type: create_category_dto_1.CreateCategoryDto }),
@@ -75,6 +82,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "findOne", null);
 __decorate([
+    (0, role_decorator_1.Role)(user_role_1.Roles.ADMIN, user_role_1.Roles.SUPERADMIN),
+    (0, common_1.UseGuards)(role_guard_1.RoleGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Patch)(":id"),
     (0, swagger_1.ApiOperation)({ summary: "Kategoriya ma'lumotlarini yangilash" }),
     (0, swagger_1.ApiParam)({
@@ -91,6 +101,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "update", null);
 __decorate([
+    (0, role_decorator_1.Role)(user_role_1.Roles.ADMIN),
+    (0, common_1.UseGuards)(role_guard_1.RoleGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Delete)(":id"),
     (0, swagger_1.ApiOperation)({ summary: "Kategoriya o'chirish" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "O'chiriladigan kategoriyaning ID" }),

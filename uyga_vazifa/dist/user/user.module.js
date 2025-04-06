@@ -18,6 +18,7 @@ exports.UserModule = UserModule = __decorate([
     (0, common_1.Module)({
         imports: [
             jwt_1.JwtModule.register({
+                global: true,
                 secret: "token",
                 signOptions: { expiresIn: "1h" },
             }),

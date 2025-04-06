@@ -8,8 +8,8 @@ export declare class UserService {
     constructor(prisma: PrismaService, jwtService: JwtService);
     register(createUserDto: CreateUserDto): Promise<{
         data: {
-            id: string;
             name: string;
+            id: string;
             password: string;
             email: string;
             role: string;
@@ -19,8 +19,8 @@ export declare class UserService {
         data: string;
     }>;
     findAll(): Promise<{
-        id: string;
         name: string;
+        id: string;
         password: string;
         email: string;
         role: string;

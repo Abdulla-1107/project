@@ -9,33 +9,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthGuard = void 0;
+exports.RoleGuard = void 0;
 const common_1 = require("@nestjs/common");
-const jwt_1 = require("@nestjs/jwt");
-let AuthGuard = class AuthGuard {
-    jwt;
-    constructor(jwt) {
-        this.jwt = jwt;
+const core_1 = require("@nestjs/core");
+const role_decorator_1 = require("../decorators/role.decorator");
+let RoleGuard = class RoleGuard {
+    reflector;
+    constructor(reflector) {
+        this.reflector = reflector;
     }
     canActivate(context) {
-        let request = context.switchToHttp().getRequest();
-        let token = request.headers.authorization?.split(" ")[1];
-        if (!token) {
-            throw new common_1.UnauthorizedException("Token Topilmadi !");
-        }
-        try {
-            let data = this.jwt.verify(token);
-            request["user"] = data.id;
+        const roles = this.reflector.getAllAndOverride(role_decorator_1.ROLES_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (!roles) {
             return true;
         }
-        catch (error) {
-            throw new common_1.UnauthorizedException(error.message);
+        const { user } = context.switchToHttp().getRequest();
+        const hasRole = roles.includes(user.role);
+        if (!hasRole) {
+            throw new common_1.ForbiddenException("Sizga bu amalni bajarishga ruxsat yo'q");
         }
+        return true;
     }
 };
-exports.AuthGuard = AuthGuard;
-exports.AuthGuard = AuthGuard = __decorate([
+exports.RoleGuard = RoleGuard;
+exports.RoleGuard = RoleGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
-], AuthGuard);
-//# sourceMappingURL=auth.guard.js.map
+    __metadata("design:paramtypes", [core_1.Reflector])
+], RoleGuard);
+//# sourceMappingURL=role.guard.js.map

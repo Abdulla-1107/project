@@ -6,46 +6,46 @@ export declare class CategoryService {
     constructor(prisma: PrismaService);
     create(createCategoryDto: CreateCategoryDto): Promise<{
         data: {
-            id: string;
             name: string;
+            id: string;
         };
     }>;
     findAll(): Promise<({
         Product: {
-            id: string;
             name: string;
             color: string;
             price: number;
             categoryId: string;
+            id: string;
         }[];
     } & {
-        id: string;
         name: string;
+        id: string;
     })[]>;
     findOne(id: string): Promise<{
         data: {
             Product: {
-                id: string;
                 name: string;
                 color: string;
                 price: number;
                 categoryId: string;
+                id: string;
             }[];
         } & {
-            id: string;
             name: string;
+            id: string;
         };
     }>;
     update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<{
         data: {
-            id: string;
             name: string;
+            id: string;
         };
     }>;
     remove(id: string): Promise<{
         data: {
-            id: string;
             name: string;
+            id: string;
         };
     }>;
 }
