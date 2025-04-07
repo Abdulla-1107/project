@@ -1,8 +1,12 @@
-import { Controller, Post, Body, Get } from "@nestjs/common";
+import { Controller, Post, Body, Get, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from "@nestjs/swagger";
+import { AuthGuard } from "src/auth/auth.guard";
+import { RoleGuard } from "src/auth/role.guard";
+import { Role } from "src/decorators/role.decorator";
+import { Roles } from "src/Enums/user.role";
 
 @ApiTags("user")
 @Controller("user")
@@ -29,6 +33,9 @@ export class UserController {
     return this.userService.login(loginUserDto);
   }
 
+  @Role(Roles.ADMIN)
+  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard)
   @Get()
   @ApiOperation({ summary: "Barcha foydalanuvchilarni olish" })
   @ApiResponse({ status: 200, description: "Barcha foydalanuvchilar qaytarildi" })
