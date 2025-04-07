@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import {
@@ -15,6 +16,7 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiQuery,
 } from "@nestjs/swagger";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
@@ -42,15 +44,32 @@ export class CategoryController {
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
-
+  
+  @UseGuards(AuthGuard)
   @Get()
-  @ApiOperation({ summary: "Barcha kategoriyalarni olish" })
-  @ApiResponse({ status: 200, description: "Barcha kategoriyalar qaytarildi" })
-  @ApiResponse({ status: 404, description: "Kategoriya topilmadi" })
-  findAll() {
-    return this.categoryService.findAll();
+  @ApiOperation({ summary: "Barcha kategoriyalarni olish (filter, sort, pagination bilan)" })
+  @ApiQuery({ name: "search", required: false })
+  @ApiQuery({ name: "sortBy", required: false, description: "Masalan: name" })
+  @ApiQuery({ name: "sortOrder", required: false, description: "asc yoki desc" })
+  @ApiQuery({ name: "page", required: false })
+  @ApiQuery({ name: "limit", required: false })
+  findAll(
+    @Query("search") search?: string,
+    @Query("sortBy") sortBy?: string,
+    @Query("sortOrder") sortOrder: "asc" | "desc" = "asc",
+    @Query("page") page = "1",
+    @Query("limit") limit = "10"
+  ) {
+    return this.categoryService.findAll({
+      search,
+      sortBy,
+      sortOrder,
+      page: parseInt(page),
+      limit: parseInt(limit),
+    });
   }
-
+  
+  @UseGuards(AuthGuard)
   @Get(":id")
   @ApiOperation({ summary: "Bitta kategoriyani olish" })
   @ApiParam({ name: "id", description: "Kategoriya ID" })

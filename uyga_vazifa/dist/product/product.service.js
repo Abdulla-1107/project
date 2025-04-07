@@ -63,12 +63,39 @@ let ProductService = class ProductService {
         }
         return { data: product };
     }
-    async findAll() {
-        return await this.prisma.product.findMany({
+    async findAll(query) {
+        const { search, categoryId, sortBy, sortOrder, page, limit } = query;
+        const where = {};
+        if (search) {
+            where.name = {
+                contains: search,
+                mode: "insensitive",
+            };
+        }
+        if (categoryId) {
+            where.categoryId = categoryId;
+        }
+        const orderBy = sortBy
+            ? {
+                [sortBy]: sortOrder || "asc",
+            }
+            : undefined;
+        const total = await this.prisma.product.count({ where });
+        const products = await this.prisma.product.findMany({
+            where,
+            orderBy,
+            skip: (page - 1) * limit,
+            take: limit,
             include: {
                 Category: true,
             },
         });
+        return {
+            total,
+            page,
+            limit,
+            data: products,
+        };
     }
 };
 exports.ProductService = ProductService;

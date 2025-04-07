@@ -30,8 +30,15 @@ let ProductController = class ProductController {
     create(createProductDto) {
         return this.productService.create(createProductDto);
     }
-    findAll() {
-        return this.productService.findAll();
+    findAll(search, categoryId, sortBy, sortOrder = "asc", page = "1", limit = "10") {
+        return this.productService.findAll({
+            search,
+            categoryId,
+            sortBy,
+            sortOrder,
+            page: parseInt(page),
+            limit: parseInt(limit),
+        });
     }
     findOne(id) {
         return this.productService.findOne(id);
@@ -60,9 +67,31 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({ summary: "Barcha mahsulotlarni olish" }),
+    (0, swagger_1.ApiOperation)({
+        summary: "Barcha mahsulotlarni olish (filter, sort, pagination bilan)",
+    }),
+    (0, swagger_1.ApiQuery)({ name: "search", required: false }),
+    (0, swagger_1.ApiQuery)({ name: "categoryId", required: false }),
+    (0, swagger_1.ApiQuery)({
+        name: "sortBy",
+        required: false,
+        description: "Masalan: price yoki name",
+    }),
+    (0, swagger_1.ApiQuery)({
+        name: "sortOrder",
+        required: false,
+        description: "asc yoki desc",
+    }),
+    (0, swagger_1.ApiQuery)({ name: "page", required: false }),
+    (0, swagger_1.ApiQuery)({ name: "limit", required: false }),
+    __param(0, (0, common_1.Query)("search")),
+    __param(1, (0, common_1.Query)("categoryId")),
+    __param(2, (0, common_1.Query)("sortBy")),
+    __param(3, (0, common_1.Query)("sortOrder")),
+    __param(4, (0, common_1.Query)("page")),
+    __param(5, (0, common_1.Query)("limit")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String, String, String, String, Object, Object]),
     __metadata("design:returntype", void 0)
 ], ProductController.prototype, "findAll", null);
 __decorate([

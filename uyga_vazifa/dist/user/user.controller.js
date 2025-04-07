@@ -18,6 +18,10 @@ const user_service_1 = require("./user.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const login_user_dto_1 = require("./dto/login-user.dto");
 const swagger_1 = require("@nestjs/swagger");
+const auth_guard_1 = require("../auth/auth.guard");
+const role_guard_1 = require("../auth/role.guard");
+const role_decorator_1 = require("../decorators/role.decorator");
+const user_role_1 = require("../Enums/user.role");
 let UserController = class UserController {
     userService;
     constructor(userService) {
@@ -59,6 +63,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "login", null);
 __decorate([
+    (0, role_decorator_1.Role)(user_role_1.Roles.ADMIN),
+    (0, common_1.UseGuards)(role_guard_1.RoleGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: "Barcha foydalanuvchilarni olish" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "Barcha foydalanuvchilar qaytarildi" }),

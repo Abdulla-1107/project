@@ -30,8 +30,14 @@ let CategoryController = class CategoryController {
     create(createCategoryDto) {
         return this.categoryService.create(createCategoryDto);
     }
-    findAll() {
-        return this.categoryService.findAll();
+    findAll(search, sortBy, sortOrder = "asc", page = "1", limit = "10") {
+        return this.categoryService.findAll({
+            search,
+            sortBy,
+            sortOrder,
+            page: parseInt(page),
+            limit: parseInt(limit),
+        });
     }
     findOne(id) {
         return this.categoryService.findOne(id);
@@ -62,15 +68,25 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "create", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({ summary: "Barcha kategoriyalarni olish" }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: "Barcha kategoriyalar qaytarildi" }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: "Kategoriya topilmadi" }),
+    (0, swagger_1.ApiOperation)({ summary: "Barcha kategoriyalarni olish (filter, sort, pagination bilan)" }),
+    (0, swagger_1.ApiQuery)({ name: "search", required: false }),
+    (0, swagger_1.ApiQuery)({ name: "sortBy", required: false, description: "Masalan: name" }),
+    (0, swagger_1.ApiQuery)({ name: "sortOrder", required: false, description: "asc yoki desc" }),
+    (0, swagger_1.ApiQuery)({ name: "page", required: false }),
+    (0, swagger_1.ApiQuery)({ name: "limit", required: false }),
+    __param(0, (0, common_1.Query)("search")),
+    __param(1, (0, common_1.Query)("sortBy")),
+    __param(2, (0, common_1.Query)("sortOrder")),
+    __param(3, (0, common_1.Query)("page")),
+    __param(4, (0, common_1.Query)("limit")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String, String, String, Object, Object]),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "findAll", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(":id"),
     (0, swagger_1.ApiOperation)({ summary: "Bitta kategoriyani olish" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Kategoriya ID" }),

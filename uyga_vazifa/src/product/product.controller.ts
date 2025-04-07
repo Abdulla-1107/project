@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
@@ -17,6 +18,7 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiQuery,
 } from "@nestjs/swagger";
 import { AuthGuard } from "src/auth/auth.guard";
 import { RoleGuard } from "src/auth/role.guard";
@@ -41,9 +43,39 @@ export class ProductController {
 
   @UseGuards(AuthGuard)
   @Get()
-  @ApiOperation({ summary: "Barcha mahsulotlarni olish" })
-  findAll() {
-    return this.productService.findAll();
+  @ApiOperation({
+    summary: "Barcha mahsulotlarni olish (filter, sort, pagination bilan)",
+  })
+  @ApiQuery({ name: "search", required: false })
+  @ApiQuery({ name: "categoryId", required: false })
+  @ApiQuery({
+    name: "sortBy",
+    required: false,
+    description: "Masalan: price yoki name",
+  })
+  @ApiQuery({
+    name: "sortOrder",
+    required: false,
+    description: "asc yoki desc",
+  })
+  @ApiQuery({ name: "page", required: false })
+  @ApiQuery({ name: "limit", required: false })
+  findAll(
+    @Query("search") search?: string,
+    @Query("categoryId") categoryId?: string,
+    @Query("sortBy") sortBy?: string,
+    @Query("sortOrder") sortOrder: "asc" | "desc" = "asc",
+    @Query("page") page = "1",
+    @Query("limit") limit = "10"
+  ) {
+    return this.productService.findAll({
+      search,
+      categoryId,
+      sortBy,
+      sortOrder,
+      page: parseInt(page),
+      limit: parseInt(limit),
+    });
   }
 
   @UseGuards(AuthGuard)

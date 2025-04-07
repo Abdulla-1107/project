@@ -10,18 +10,23 @@ export declare class CategoryController {
             name: string;
         };
     }>;
-    findAll(): Promise<({
-        Product: {
+    findAll(search?: string, sortBy?: string, sortOrder?: "asc" | "desc", page?: string, limit?: string): Promise<{
+        total: number;
+        page: number;
+        limit: number;
+        data: ({
+            Product: {
+                id: string;
+                name: string;
+                color: string;
+                price: number;
+                categoryId: string;
+            }[];
+        } & {
             id: string;
             name: string;
-            color: string;
-            price: number;
-            categoryId: string;
-        }[];
-    } & {
-        id: string;
-        name: string;
-    })[]>;
+        })[];
+    }>;
     findOne(id: string): Promise<{
         data: {
             Product: {

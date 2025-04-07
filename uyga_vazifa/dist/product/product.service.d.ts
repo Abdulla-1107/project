@@ -45,16 +45,28 @@ export declare class ProductService {
             id: string;
         };
     }>;
-    findAll(): Promise<({
-        Category: {
+    findAll(query: {
+        search?: string;
+        categoryId?: string;
+        sortBy?: string;
+        sortOrder?: "asc" | "desc";
+        page: number;
+        limit: number;
+    }): Promise<{
+        total: number;
+        page: number;
+        limit: number;
+        data: ({
+            Category: {
+                name: string;
+                id: string;
+            };
+        } & {
             name: string;
+            color: string;
+            price: number;
+            categoryId: string;
             id: string;
-        };
-    } & {
-        name: string;
-        color: string;
-        price: number;
-        categoryId: string;
-        id: string;
-    })[]>;
+        })[];
+    }>;
 }

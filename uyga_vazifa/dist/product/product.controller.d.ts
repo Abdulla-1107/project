@@ -6,55 +6,60 @@ export declare class ProductController {
     constructor(productService: ProductService);
     create(createProductDto: CreateProductDto): Promise<{
         data: {
-            id: string;
             name: string;
             color: string;
             price: number;
             categoryId: string;
+            id: string;
         };
     }>;
-    findAll(): Promise<({
-        Category: {
-            id: string;
+    findAll(search?: string, categoryId?: string, sortBy?: string, sortOrder?: "asc" | "desc", page?: string, limit?: string): Promise<{
+        total: number;
+        page: number;
+        limit: number;
+        data: ({
+            Category: {
+                name: string;
+                id: string;
+            };
+        } & {
             name: string;
-        };
-    } & {
-        id: string;
-        name: string;
-        color: string;
-        price: number;
-        categoryId: string;
-    })[]>;
+            color: string;
+            price: number;
+            categoryId: string;
+            id: string;
+        })[];
+    }>;
     findOne(id: string): Promise<{
         data: {
             Category: {
-                id: string;
                 name: string;
+                id: string;
             };
         } & {
-            id: string;
             name: string;
             color: string;
             price: number;
             categoryId: string;
+            id: string;
         };
     }>;
     update(id: string, updateProductDto: UpdateProductDto): Promise<{
         data: {
-            id: string;
             name: string;
             color: string;
             price: number;
             categoryId: string;
+            id: string;
         };
     }>;
     remove(id: string): Promise<{
         data: {
-            id: string;
             name: string;
             color: string;
             price: number;
             categoryId: string;
+            id: string;
         };
     }>;
 }
