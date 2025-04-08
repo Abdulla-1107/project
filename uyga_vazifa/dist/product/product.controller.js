@@ -22,6 +22,7 @@ const auth_guard_1 = require("../auth/auth.guard");
 const role_guard_1 = require("../auth/role.guard");
 const role_decorator_1 = require("../decorators/role.decorator");
 const user_role_1 = require("../Enums/user.role");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let ProductController = class ProductController {
     productService;
     constructor(productService) {
@@ -66,7 +67,9 @@ __decorate([
 ], ProductController.prototype, "create", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseInterceptors)(cache_manager_1.CacheInterceptor),
     (0, common_1.Get)(),
+    (0, cache_manager_1.CacheTTL)(60),
     (0, swagger_1.ApiOperation)({
         summary: "Barcha mahsulotlarni olish (filter, sort, pagination bilan)",
     }),
@@ -96,7 +99,9 @@ __decorate([
 ], ProductController.prototype, "findAll", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseInterceptors)(cache_manager_1.CacheInterceptor),
     (0, common_1.Get)(":id"),
+    (0, cache_manager_1.CacheTTL)(60),
     (0, swagger_1.ApiOperation)({ summary: "Bitta mahsulotni olish" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Mahsulot ID" }),
     __param(0, (0, common_1.Param)("id")),

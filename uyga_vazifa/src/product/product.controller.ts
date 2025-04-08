@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  UseInterceptors,
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
@@ -24,6 +25,7 @@ import { AuthGuard } from "src/auth/auth.guard";
 import { RoleGuard } from "src/auth/role.guard";
 import { Role } from "src/decorators/role.decorator";
 import { Roles } from "src/Enums/user.role";
+import { CacheInterceptor, CacheTTL } from "@nestjs/cache-manager";
 
 @ApiTags("Product")
 @Controller("product")
@@ -42,7 +44,9 @@ export class ProductController {
   }
 
   @UseGuards(AuthGuard)
+  @UseInterceptors(CacheInterceptor)
   @Get()
+  @CacheTTL(60)
   @ApiOperation({
     summary: "Barcha mahsulotlarni olish (filter, sort, pagination bilan)",
   })
@@ -79,7 +83,9 @@ export class ProductController {
   }
 
   @UseGuards(AuthGuard)
+  @UseInterceptors(CacheInterceptor)
   @Get(":id")
+  @CacheTTL(60)
   @ApiOperation({ summary: "Bitta mahsulotni olish" })
   @ApiParam({ name: "id", description: "Mahsulot ID" })
   findOne(@Param("id") id: string) {

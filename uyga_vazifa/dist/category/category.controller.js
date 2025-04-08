@@ -22,6 +22,7 @@ const role_decorator_1 = require("../decorators/role.decorator");
 const user_role_1 = require("../Enums/user.role");
 const role_guard_1 = require("../auth/role.guard");
 const auth_guard_1 = require("../auth/auth.guard");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let CategoryController = class CategoryController {
     categoryService;
     constructor(categoryService) {
@@ -69,11 +70,19 @@ __decorate([
 ], CategoryController.prototype, "create", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseInterceptors)(cache_manager_1.CacheInterceptor),
     (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({ summary: "Barcha kategoriyalarni olish (filter, sort, pagination bilan)" }),
+    (0, cache_manager_1.CacheTTL)(60),
+    (0, swagger_1.ApiOperation)({
+        summary: "Barcha kategoriyalarni olish (filter, sort, pagination bilan)",
+    }),
     (0, swagger_1.ApiQuery)({ name: "search", required: false }),
     (0, swagger_1.ApiQuery)({ name: "sortBy", required: false, description: "Masalan: name" }),
-    (0, swagger_1.ApiQuery)({ name: "sortOrder", required: false, description: "asc yoki desc" }),
+    (0, swagger_1.ApiQuery)({
+        name: "sortOrder",
+        required: false,
+        description: "asc yoki desc",
+    }),
     (0, swagger_1.ApiQuery)({ name: "page", required: false }),
     (0, swagger_1.ApiQuery)({ name: "limit", required: false }),
     __param(0, (0, common_1.Query)("search")),
@@ -87,7 +96,9 @@ __decorate([
 ], CategoryController.prototype, "findAll", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseInterceptors)(cache_manager_1.CacheInterceptor),
     (0, common_1.Get)(":id"),
+    (0, cache_manager_1.CacheTTL)(60),
     (0, swagger_1.ApiOperation)({ summary: "Bitta kategoriyani olish" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Kategoriya ID" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "Kategoriya topildi" }),

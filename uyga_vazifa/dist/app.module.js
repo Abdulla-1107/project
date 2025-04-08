@@ -14,12 +14,25 @@ const product_module_1 = require("./product/product.module");
 const category_module_1 = require("./category/category.module");
 const user_module_1 = require("./user/user.module");
 const prisma_module_1 = require("./prisma/prisma.module");
+const cache_manager_1 = require("@nestjs/cache-manager");
+const redisStore = require("cache-manager-ioredis");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [product_module_1.ProductModule, category_module_1.CategoryModule, user_module_1.UserModule, prisma_module_1.PrismaModule],
+        imports: [
+            product_module_1.ProductModule,
+            category_module_1.CategoryModule,
+            user_module_1.UserModule,
+            prisma_module_1.PrismaModule,
+            cache_manager_1.CacheModule.register({
+                isGlobal: true,
+                ttl: 60,
+                store: redisStore,
+                port: 6379,
+            }),
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

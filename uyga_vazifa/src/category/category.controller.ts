@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  UseInterceptors,
 } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import {
@@ -24,6 +25,7 @@ import { Role } from "src/decorators/role.decorator";
 import { Roles } from "src/Enums/user.role";
 import { RoleGuard } from "src/auth/role.guard";
 import { AuthGuard } from "src/auth/auth.guard";
+import { CacheInterceptor, CacheTTL } from "@nestjs/cache-manager";
 
 @ApiTags("Category")
 @Controller("category")
@@ -44,13 +46,21 @@ export class CategoryController {
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
-  
+
   @UseGuards(AuthGuard)
+  @UseInterceptors(CacheInterceptor)
   @Get()
-  @ApiOperation({ summary: "Barcha kategoriyalarni olish (filter, sort, pagination bilan)" })
+  @CacheTTL(60)
+  @ApiOperation({
+    summary: "Barcha kategoriyalarni olish (filter, sort, pagination bilan)",
+  })
   @ApiQuery({ name: "search", required: false })
   @ApiQuery({ name: "sortBy", required: false, description: "Masalan: name" })
-  @ApiQuery({ name: "sortOrder", required: false, description: "asc yoki desc" })
+  @ApiQuery({
+    name: "sortOrder",
+    required: false,
+    description: "asc yoki desc",
+  })
   @ApiQuery({ name: "page", required: false })
   @ApiQuery({ name: "limit", required: false })
   findAll(
@@ -68,9 +78,11 @@ export class CategoryController {
       limit: parseInt(limit),
     });
   }
-  
+
   @UseGuards(AuthGuard)
+  @UseInterceptors(CacheInterceptor)
   @Get(":id")
+  @CacheTTL(60)
   @ApiOperation({ summary: "Bitta kategoriyani olish" })
   @ApiParam({ name: "id", description: "Kategoriya ID" })
   @ApiResponse({ status: 200, description: "Kategoriya topildi" })
